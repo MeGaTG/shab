@@ -1,27 +1,25 @@
-
-local function run(msg, matches)
- local text = matches[2]
- if matches[1] == "plug" then
-  return text
- else
-  local file = io.open("./plugins/"..matches[1], "w")
-  file:write(text)
-  file:flush()
-  file:close()
-  return send_document("chat#id"..msg.to.id,"./plugins/"..matches[1], ok_cb, false)
- end
+do
+ local function save_file(name, text)
+    local file = io.open("./plugins/"..name, "w")
+    file:write(text)
+    file:flush()
+    file:close()
+    return "Plugin saved."
+end   
+function run(msg, matches)
+  if matches[1] == "addplug" and is_sudo(msg) then
+ 
+         local name = matches[2]
+        local text = matches[3]
+        return save_file(name, text)
+        
+  end
 end
-
 return {
- description = "Simplest plugin ever!",
- usage = {
-  "!plug [text] : return text",
-  "plug> [ext] [text] : save text to file",
- },
- patterns = {
-  "^[!/](plug) (.*)$",
-  "^[Pp]lug> ([^%s]+) (.*)$",
- },
- run = run,
-privileged = true,
+  patterns = {
+  "^/(addplug) ([^%s]+) (.+)$"
+  },
+  run = run
 }
+end
+-- create by @shervin_hacker
